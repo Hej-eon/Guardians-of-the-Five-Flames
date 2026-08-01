@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Guardians of the Five Flames</title>
@@ -12,86 +12,87 @@
   canvas {
     display: block;
     margin: auto;
-    background: #1a0f0a;
     image-rendering: pixelated;
+    background: black;
   }
 </style>
 </head>
 <body>
 
-<canvas id="game" width="256" height="224"></canvas>
+<canvas id="game" width="512" height="384"></canvas>
 
 <script>
+// ------------------------------------------------------
+// CANVAS SETUP
+// ------------------------------------------------------
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
+ctx.imageSmoothingEnabled = false;
 
+// ------------------------------------------------------
+// GAME STATE
+// ------------------------------------------------------
 let state = "menu"; // menu → worldmap → game
 
-// --- WORLD MAP DATA ---
-const worlds = [
-  { name: "Agir", x: 96, y: 20, color: "#ff3b3b" },
-  { name: "Zagros", x: 40, y: 70, color: "#8fb1ff" },
-  { name: "Roj", x: 152, y: 70, color: "#ffd34f" },
-  { name: "Çem", x: 96, y: 170, color: "#4fbaff" },
-  { name: "Sterk", x: 96, y: 120, color: "#c96bff" }
-];
+// ------------------------------------------------------
+// LOAD START MENU BACKGROUND IMAGE
+// ------------------------------------------------------
+const bg = new Image();
+bg.src = "images/startmenu.png"; // your uploaded image
 
-canvas.addEventListener("click", (e) => {
-  const rect = canvas.getBoundingClientRect();
-  const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
-  const my = (e.clientY - rect.top) * (canvas.height / rect.height);
+bg.onload = () => {
+  drawMenu();
+};
 
+// ------------------------------------------------------
+// CLICK HANDLER
+// ------------------------------------------------------
+canvas.addEventListener("click", () => {
   if (state === "menu") {
     state = "worldmap";
-  } else if (state === "worldmap") {
-    for (let w of worlds) {
-      if (mx > w.x && mx < w.x + 64 && my > w.y && my < w.y + 64) {
-        alert("Entering World: " + w.name);
-        // later: load world levels
-      }
-    }
+    drawWorldMap();
   }
 });
 
+// ------------------------------------------------------
+// DRAW MENU SCREEN
+// ------------------------------------------------------
 function drawMenu() {
-  ctx.fillStyle = "#1a0f0a";
-  ctx.fillRect(0, 0, 256, 224);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = "#ffcc66";
-  ctx.font = "20px monospace";
-  ctx.fillText("Guardians of the", 40, 80);
-  ctx.fillText("Five Flames", 70, 110);
+  // Draw background art
+  ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
 
+  // Draw "Click to Start"
+  ctx.font = "24px monospace";
   ctx.fillStyle = "#ffffff";
-  ctx.font = "14px monospace";
-  ctx.fillText("Click to Start", 80, 160);
+  ctx.textAlign = "center";
+  ctx.fillText("Click to Start", canvas.width / 2, 350);
 }
 
+// ------------------------------------------------------
+// DRAW WORLD MAP SCREEN (placeholder)
+// ------------------------------------------------------
 function drawWorldMap() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   ctx.fillStyle = "#0f0a1a";
-  ctx.fillRect(0, 0, 256, 224);
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = "#ffffff";
-  ctx.font = "16px monospace";
-  ctx.fillText("Choose a World", 70, 20);
-
-  worlds.forEach(w => {
-    ctx.fillStyle = w.color;
-    ctx.fillRect(w.x, w.y, 64, 64);
-
-    ctx.fillStyle = "#000";
-    ctx.font = "12px monospace";
-    ctx.fillText(w.name, w.x + 8, w.y + 36);
-  });
+  ctx.font = "28px monospace";
+  ctx.textAlign = "center";
+  ctx.fillText("World Map Coming Soon", canvas.width / 2, canvas.height / 2);
 }
 
+// ------------------------------------------------------
+// MAIN LOOP (not needed yet but ready for future use)
+// ------------------------------------------------------
 function loop() {
-  if (state === "menu") drawMenu();
-  if (state === "worldmap") drawWorldMap();
   requestAnimationFrame(loop);
 }
-
 loop();
+
 </script>
 
 </body>
